@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "data-validator"
+version = "0.1.0"
+description = "A CLI tool and library for validating and cleaning CSV files against JSON schemas."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "mypy>=1.5.0",
+    "ruff>=0.1.0",
+    "black>=24.0.0",
+]
+
+[project.scripts]
+data-validator = "data_validator.cli:app"
+
+[tool.setuptools.package-data]
+data_validator = ["py.typed"]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.mypy]
+strict = true
+packages = ["data_validator"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+# B008: typer's Argument()/Option() *must* be called in the default position;
+# that's the documented API, not a mutable-default bug, so we allow it in cli.py.
+extend-per-file-ignores = { "src/data_validator/cli.py" = ["B008"] }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=data_validator --cov-report=term-missing"
