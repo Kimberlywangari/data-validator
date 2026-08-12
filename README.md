@@ -20,8 +20,10 @@ data-validator/
 │   ├── exceptions.py         # DataValidatorError, SchemaError, ValidationError
 │   └── py.typed              # marks the package as typed for mypy
 └── tests/
+    ├── __init__.py
     ├── test_cli.py
     └── test_engine.py
+
 ```
 
 ## Setup
