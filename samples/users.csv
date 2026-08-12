@@ -1,0 +1,6 @@
+id,name,score
+1,Kimberly,95.5
+2,Bob,invalid_float
+,Charlie,88.0
+4,,90.1
+5,Michelle,
