@@ -83,25 +83,3 @@ python -m pytest                    # tests + coverage (configured in pyproject.
 
 All four currently pass clean, with **94% test coverage** on `src/data_validator`.
 
-## Design notes / what each module does
-
-- **`exceptions.py`** — `DataValidatorError` is the base class; `SchemaError`
-  covers a missing/malformed schema file, `ValidationError` covers a CSV file
-  that's empty or has no header row. The CLI catches the base class so any
-  domain error becomes a clean `Error: ...` message instead of a traceback.
-- **`engine.py`** — the only place with actual validation logic:
-  - `load_schema(path)` reads and validates the JSON schema file.
-  - `validate_record(record, schema)` checks a single row (a `dict[str, str]`,
-    as produced by `csv.DictReader`) and returns
-    `(is_valid, parsed_or_None, error_messages)`.
-  - `validate_csv(csv_path, schema_path)` ties the two together, reading the
-    CSV line by line and returning a `ValidationResult` (`valid_records`,
-    `errors`, and an `is_valid` property).
-- **`cli.py`** — a thin Typer wrapper: calls `validate_csv`, prints a
-  green/red summary with `rich`-style `typer.secho`, and sets the process
-  exit code.
-
-Edge cases handled explicitly and covered by tests: empty CSV file (no
-header), missing/malformed schema JSON, empty field values, values that fail
-to cast to the declared type, and a full multi-row CSV with a mix of valid
-and invalid rows.
