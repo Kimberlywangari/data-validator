@@ -1,0 +1,2 @@
+[console_scripts]
+data-validator = data_validator.cli:app
