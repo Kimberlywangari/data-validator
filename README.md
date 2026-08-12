@@ -105,30 +105,3 @@ Edge cases handled explicitly and covered by tests: empty CSV file (no
 header), missing/malformed schema JSON, empty field values, values that fail
 to cast to the declared type, and a full multi-row CSV with a mix of valid
 and invalid rows.
-
-## Notes from review
-
-This project had a structural problem before this pass: `engine.py` was an
-empty file, and `cli.py`, `exceptions.py`, and the test files each referenced
-different, incompatible names for the same things (e.g. tests expected
-`SchemaError`/`ValidationError` while `exceptions.py` defined
-`DataValidationError`). Nothing in the repo could actually run — `pytest`
-failed at collection with `ImportError` before a single test executed. The
-previous `models.py` dataclasses were also unused by any other file and
-described a different shape (`RowError`, `ValidationReport.valid_rows`) than
-what `cli.py` and the tests expected (`result.valid_records`, errors as
-`{"line": ..., "errors": [...]}` dicts), so it was removed rather than kept
-as dead code.
-
-`engine.py` was implemented from scratch to match the *tests'* expected
-interface (since the tests already encoded a coherent, sensible design), and
-`cli.py`/`exceptions.py` were aligned to match. One test itself had a
-version-compatibility bug (`result.stdout` doesn't include Typer's usage
-error on newer Click, which now separates stdout/stderr) — fixed to check
-`result.output` instead.
-
-**Separately:** the git history for this repo has a single commit
-(`chore: initialize git...`) with all the actual code still untracked. If a
-grading criterion is "steady, spread-out work across multiple days," commit
-the code in stages now and going forward — a last-minute single commit (or
-no commits at all) won't satisfy that regardless of code quality.
