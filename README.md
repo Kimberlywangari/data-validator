@@ -9,6 +9,7 @@ exactly which rows/fields fail and why.
 
 ```
 data-validator/
+├── .venv
 ├── pyproject.toml
 ├── samples/
 │   ├── schema.json          # example schema
